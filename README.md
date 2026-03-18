@@ -58,9 +58,9 @@ flowchart TD
         J1[Judge 1] & J2[Judge 2] & J3[Judge 3] -->|rank & tally| W[Winner]
     end
 
-    S2a --> P3
-    S1a --> P3
-    S3a --> P3
+    S1a --> J1 & J2 & J3
+    S2a --> J1 & J2 & J3
+    S3a --> J1 & J2 & J3
 
     W -->|apply diff| R[Changes applied to working tree]
 ```
