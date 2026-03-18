@@ -54,11 +54,13 @@ flowchart TD
         X -->|improve| S3a["Solution 3'"]
     end
 
-    S1a & S2a & S3a --> P3
-
     subgraph P3["Phase 3: Borda Count Voting"]
         J1[Judge 1] & J2[Judge 2] & J3[Judge 3] -->|rank & tally| W[Winner]
     end
+
+    S2a --> P3
+    S1a --> P3
+    S3a --> P3
 
     W -->|apply diff| R[Changes applied to working tree]
 ```
