@@ -51,12 +51,10 @@ Before spawning agents:
 
 Spawn all agents **in a single message** so they run in parallel. Each agent uses `isolation: "worktree"` to get its own copy of the repo.
 
-Give each agent a name like `horse-1`, `horse-2`, `horse-3` so you can continue them later with SendMessage.
-
 For each agent (numbered 1 through N), use the Agent tool with:
 
 ```
-description: "Horse race agent {i} round 1"
+description: "horse-{i}"
 isolation: "worktree"
 prompt: |
   You are Agent {i} in a competitive programming challenge. Your goal is to produce the best possible solution.
@@ -81,14 +79,14 @@ prompt: |
   Each bullet should be one concise sentence describing a key decision or approach you took.
 ```
 
-### Step 2: Collect Diffs and Display Summaries
+### Step 2: Collect Diffs, Agent IDs, and Display Summaries
 
-After all agents complete, extract the diff and SUMMARY from each agent's response.
+After all agents complete, extract the diff, SUMMARY, and **agent ID** from each agent's response. The agent ID is returned automatically when each Agent tool call completes (e.g., `agentId: a63a526a86822148a`). You MUST save these IDs — they are required to continue agents in improvement rounds via SendMessage.
 
-Store diffs:
-- Agent 1 → diff_1
-- Agent 2 → diff_2
-- Agent 3 → diff_3
+Store for each agent:
+- Agent 1 → diff_1, agent_id_1
+- Agent 2 → diff_2, agent_id_2
+- Agent 3 → diff_3, agent_id_3
 
 **Display each agent's summary to the user.** Output a status update like:
 
@@ -117,12 +115,12 @@ If an agent failed to produce a diff or errored out, exclude it from subsequent 
 
 ### Step 3: Improvement Rounds (Phase 2)
 
-For each improvement round (default: 2 rounds), **continue** each agent using SendMessage. Each agent receives all other agents' diffs. Send all messages **in a single message** so they run in parallel.
+For each improvement round (default: 2 rounds), **continue** each agent using SendMessage with the agent ID captured in Step 2. Each agent receives all other agents' diffs. Send all messages **in a single message** so they run in parallel.
 
 Send to each agent:
 
 ```
-to: "horse-{i}"
+to: "{agent_id_i}"   # The agent ID returned from Step 1 (e.g., "a63a526a86822148a")
 message: |
   IMPROVEMENT ROUND {round}
 
