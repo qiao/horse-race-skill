@@ -41,35 +41,34 @@ The result? Better code than any single generation, consistently. 💪
 
 ```mermaid
 flowchart TD
-    M[Main Agent] -->|detects Codex CLI| D{Codex available?}
-    D -->|Yes| SPAWN4[Spawn 2 Claude + 2 Codex agents]
-    D -->|No| SPAWN3[Spawn 3 Claude agents]
-    SPAWN4 --> P1
-    SPAWN3 --> P1
+    M[Main Agent] -->|"which codex"| D{Codex CLI installed?}
+    D -->|Yes| SPAWN4["2 Claude Code + 2 Codex CLI agents"]
+    D -->|No| SPAWN3["3 Claude Code agents"]
+    SPAWN4 & SPAWN3 --> P1
 
     subgraph P1["Phase 1: Independent Implementation"]
-        A1["Agent 1 (Claude)"] -->|solves task| S1[Solution 1]
-        A2["Agent 2 (Claude)"] -->|solves task| S2[Solution 2]
-        A3["Agent 3 (Codex)"] -->|solves task| S3[Solution 3]
-        A4["Agent 4 (Codex)"] -->|solves task| S4[Solution 4]
+        direction LR
+        A1[Agent 1] -->|solves task| S1[Solution 1]
+        A2[Agent 2] -->|solves task| S2[Solution 2]
+        A3[Agent 3] -->|solves task| S3[Solution 3]
+        A4["Agent 4 (if Codex)"] -.->|solves task| S4[Solution 4]
     end
 
-    subgraph P2["Phase 2: Improvement Rounds"]
-        S1 & S2 & S3 & S4 -->|share diffs| X((Cross-Pollination))
-        X -->|improve| S1a["Solution 1'"]
+    subgraph P2["Phase 2: Cross-Pollination"]
+        direction LR
+        X((Share diffs)) -->|improve| S1a["Solution 1'"]
         X -->|improve| S2a["Solution 2'"]
         X -->|improve| S3a["Solution 3'"]
-        X -->|improve| S4a["Solution 4'"]
+        X -.->|improve| S4a["Solution 4'"]
     end
+
+    S1 & S2 & S3 & S4 --> X
 
     subgraph P3["Phase 3: Borda Count Voting"]
         J1[Judge 1] & J2[Judge 2] & J3[Judge 3] -->|rank & tally| W[Winner]
     end
 
-    S1a --> J1 & J2 & J3
-    S2a --> J1 & J2 & J3
-    S3a --> J1 & J2 & J3
-    S4a --> J1 & J2 & J3
+    S1a & S2a & S3a & S4a --> J1 & J2 & J3
 
     W -->|apply diff| R[Changes applied to working tree]
 ```
@@ -94,6 +93,6 @@ The winning diff is applied to your working tree (but not committed), so you can
 
 | Parameter | Default |
 |---|---|
-| Implementation agents | 4 (2 Claude + 2 Codex) if Codex CLI installed, otherwise 3 (all Claude) |
+| Implementation agents | 2 Claude + 2 Codex (with Codex CLI), or 3 Claude (without) |
 | Improvement rounds | 1 |
 | Voting judges | 3 |

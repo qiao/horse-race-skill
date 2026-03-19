@@ -161,7 +161,7 @@ For each improvement round (default: 1 round), send all agents the other agents'
 
 Continue each Claude Code agent using SendMessage with the agent ID captured in Step 2:
 
-```
+````
 to: "{agent_id_i}"   # The agent ID returned from Step 1 (e.g., "a63a526a86822148a")
 message: |
   IMPROVEMENT ROUND {round}
@@ -196,7 +196,7 @@ message: |
   - {bullet 1}
   - {bullet 2}
   - ... (max 5 bullets describing your key changes this round)
-```
+````
 
 #### Codex CLI agents — use Bash
 
@@ -252,7 +252,7 @@ After all improvement rounds, spawn **3 fresh judge agents** in parallel. These 
 
 Spawn all 3 judges **in a single message**:
 
-```
+````
 description: "Horse race judge {i}"
 prompt: |
   You are Judge {i}, an independent evaluator in a programming competition. You had no part in writing any of these solutions. Your job is to rank them all from best to worst, purely on merit.
@@ -296,7 +296,7 @@ prompt: |
   1. Agent {number} - {one-sentence reason}
   2. Agent {number} - {one-sentence reason}
   ... (continue for all agents)
-```
+````
 
 ### Step 5: Tally Borda Count Scores
 
@@ -320,7 +320,7 @@ For example, with 3 solutions: 1st = 2 pts, 2nd = 1 pt, 3rd = 0 pts.
 
 If two or more agents are tied for the highest Borda score, spawn one more fresh judge to break the tie, seeing only the tied solutions:
 
-```
+````
 description: "Horse race tiebreak judge"
 prompt: |
   You are a tiebreak judge in a programming competition. These solutions are tied and you must pick the winner.
@@ -351,7 +351,7 @@ prompt: |
   Respond with EXACTLY:
   WINNER: Agent {number}
   REASON: {one-sentence justification}
-```
+````
 
 ### Step 6: Apply the Winning Diff
 
